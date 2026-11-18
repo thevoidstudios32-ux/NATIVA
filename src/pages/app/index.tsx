@@ -1,17 +1,8 @@
 import {
-  Compass, FolderOpen, Home, Leaf, Map, NotebookPen, PenLine, Settings, UserRound, Users,
+  Compass, FolderOpen, Leaf, Map, NotebookPen, PenLine, Users,
 } from 'lucide-react'
 import { useParams } from 'react-router-dom'
 import { StagePlaceholder } from './StagePlaceholder'
-
-export const Dashboard = () => (
-  <StagePlaceholder
-    eyebrow="Meu NATIVA" title={<>Seu caderno de campo, <em className="text-sage">em resumo.</em></>}
-    description="Estatísticas calculadas a partir dos seus registros reais, últimas observações e atalhos."
-    stage={2} icon={Home}
-    plan={['Total de observações', 'Espécies diferentes registradas', 'Total de fotografias', 'Últimas observações e atividade', 'Prévia do mapa pessoal', 'Estado inicial para contas vazias']}
-  />
-)
 
 export const Species = () => (
   <StagePlaceholder
@@ -79,20 +70,3 @@ export const Collections = () => (
   />
 )
 
-export const Profile = () => (
-  <StagePlaceholder
-    eyebrow="Perfil" title={<>Seu <em className="text-sage">perfil.</em></>}
-    description="Nome, foto, biografia e escolha de perfil público ou privado."
-    stage={2} icon={UserRound}
-    plan={['Foto de perfil (Supabase Storage)', 'Biografia e nome de usuário', 'Perfil público opcional']}
-  />
-)
-
-export const AccountSettings = () => (
-  <StagePlaceholder
-    eyebrow="Configurações" title={<>Configurações <em className="text-sage">da conta.</em></>}
-    description="Dados pessoais, preferências de privacidade, senha e sessão."
-    stage={2} icon={Settings}
-    plan={['Editar informações pessoais', 'Preferências de privacidade', 'Alterar senha', 'Encerrar sessão']}
-  />
-)

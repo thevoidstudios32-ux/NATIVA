@@ -58,10 +58,24 @@ Variáveis de ambiente (somente credenciais públicas — **nunca** a `service_r
 ## Etapas
 
 - [x] **1** — Projeto, identidade visual, landing page, navegação
-- [ ] **2** — Supabase: tabelas, autenticação, perfis, RLS
+- [x] **2** — Supabase: tabelas, autenticação, perfis, RLS, Storage
 - [ ] **3** — Catálogo, fichas de espécies, registro de campo, Storage
 - [ ] **4** — Diário, mapa pessoal, geolocalização, filtros
 - [ ] **5** — Comunidade, registros públicos/privados, mapa da comunidade, coleções
 - [ ] **6** — Testes, revisão de segurança, deploy
 
 Fotografias editoriais da landing: Unsplash. Mapas: © colaboradores do OpenStreetMap.
+
+## Banco de dados (Supabase)
+
+Migrations em `supabase/migrations/` (aplicadas no projeto `nativa`, região São Paulo):
+
+- **Tabelas:** `profiles`, `species`, `observations`, `observation_locations`, `observation_media`,
+  `collections`, `collection_observations`, `identification_suggestions`, `reports`.
+- **Privacidade geográfica:** a coordenada exata fica em `observation_locations`, legível **somente pelo autor**.
+  `observations.public_latitude/longitude` é calculada pelo banco (≈1,1 km; ≈11 km para espécies sensíveis),
+  ignorando qualquer valor enviado pelo navegador.
+- **RLS** em todas as tabelas: registros privados e rascunhos nunca são visíveis a outras pessoas.
+- **Storage:** `observations` (privado, URLs assinadas, 10 MB, JPG/PNG/WebP/HEIC), `avatars` (público, 2 MB),
+  `species` (público, escrita só pela administração).
+- O perfil é criado automaticamente no cadastro (gatilho `handle_new_user`), privado por padrão.

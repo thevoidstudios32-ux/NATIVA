@@ -1,6 +1,8 @@
-import { Link, NavLink, Outlet } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { LogOut, Plus } from 'lucide-react'
+import { useAuth } from '@/auth/AuthProvider'
 import { Logo } from '@/components/brand/Logo'
+import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { accountNav, NEW_OBSERVATION_PATH, primaryNav, type NavItem } from '@/content/navigation'
 import { cn } from '@/lib/utils'
@@ -38,10 +40,41 @@ function Sidebar() {
         <p className="eyebrow px-3 pb-2 pt-6 text-ink-soft/70">Conta</p>
         {accountNav.map((item) => <SideLink key={item.to} item={item} />)}
       </nav>
-      <p className="px-6 py-5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-soft/60">
-        Observe · Registre · Descubra
-      </p>
+      <SidebarAccount />
     </aside>
+  )
+}
+
+function SidebarAccount() {
+  const { user, profile, signOut } = useAuth()
+  const navigate = useNavigate()
+  if (!user) {
+    return (
+      <div className="space-y-2 border-t border-line p-4">
+        <Button asChild variant="outline" className="w-full"><Link to="/entrar">Entrar</Link></Button>
+        <Button asChild variant="ghost" size="sm" className="w-full"><Link to="/cadastro">Criar conta</Link></Button>
+      </div>
+    )
+  }
+  return (
+    <div className="flex items-center gap-3 border-t border-line px-4 py-4">
+      <Link to="/perfil" className="flex min-w-0 flex-1 items-center gap-3">
+        <Avatar url={profile?.avatar_url} name={profile?.full_name || profile?.username} />
+        <span className="min-w-0">
+          <span className="block truncate text-sm font-medium text-ink">{profile?.full_name || 'Minha conta'}</span>
+          <span className="block truncate font-mono text-[11px] text-ink-soft">@{profile?.username}</span>
+        </span>
+      </Link>
+      <button
+        type="button"
+        onClick={async () => { await signOut(); navigate('/', { replace: true }) }}
+        className="grid size-9 place-items-center rounded-md text-ink-soft hover:bg-forest/5 hover:text-forest"
+        aria-label="Sair da conta"
+        title="Sair"
+      >
+        <LogOut className="size-4" />
+      </button>
+    </div>
   )
 }
 
@@ -63,11 +96,13 @@ function SideLink({ item }: { item: NavItem }) {
 }
 
 function MobileTopBar() {
+  const { user } = useAuth()
   return (
     <header className="sticky top-0 z-[1000] flex h-14 items-center justify-between border-b border-line bg-paper/95 px-4 backdrop-blur lg:hidden">
       <Link to="/inicio" aria-label="NATIVA — início"><Logo /></Link>
       <div className="flex items-center gap-1">
-        {accountNav.map((item) => (
+        {!user && <Button asChild size="sm" variant="outline"><Link to="/entrar">Entrar</Link></Button>}
+        {user && accountNav.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
